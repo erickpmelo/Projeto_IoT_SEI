@@ -13,8 +13,8 @@ Também foram feitos testes práticos utilizando LEDs e sensores para validar o 
 ---
 
 ## 📊 Tabela de resultados
-
 Tabela esta na pasta "02_investigação_pinos"
+
 ---
 
 ## 🚨 Problemas encontrados
