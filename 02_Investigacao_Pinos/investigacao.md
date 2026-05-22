@@ -13,7 +13,7 @@ Também foram feitos testes práticos utilizando LEDs e sensores para validar o 
 ---
 
 ## 📊 Tabela de resultados
-Tabela esta na pasta "02_investigação_pinos"
+Tabela esta na pasta "04_Evidencias" como "Tabela_pinos"
 
 ---
 
@@ -23,4 +23,4 @@ Foi identificado que alguns pinos podem causar falha no boot da placa quando uti
 ---
 
 ## 📸 Evidências
-Evidencias na pasta "02_investigação_pinos"
+Evidencias esta como "Evidencias_02" na pasta "04_Evidencias"
