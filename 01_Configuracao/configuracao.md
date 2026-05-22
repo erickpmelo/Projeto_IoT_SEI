@@ -22,7 +22,7 @@ Foi realizado o teste Blink para validar o funcionamento da placa.
 ---
 
 ## 📸 Evidências
-evidencia esta junto a pasta "04_Evidencias"
+evidencia esta como "Eviencias_01" junto a pasta "04_Evidencias"
 
 ---
 
