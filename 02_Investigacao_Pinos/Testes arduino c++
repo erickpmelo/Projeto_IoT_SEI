@@ -1,0 +1,275 @@
+TEMPERATURA
+
+#include <DHT.h>
+
+#define DHTPIN D2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+
+  Serial.begin(9600);
+
+  dht.begin();
+
+  Serial.println("Teste DHT11");
+}
+
+void loop() {
+
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
+
+  if (isnan(t) || isnan(h)) {
+
+    Serial.println("Erro ao ler DHT11");
+
+  } else {
+
+    Serial.print("Temp: ");
+    Serial.print(t);
+
+    Serial.print("  Umidade: ");
+    Serial.println(h);
+  }
+
+  delay(2000);
+
+ROTAÇÃO
+
+// ======================
+// SENSOR DE ROTAÇÃO
+// ======================
+
+#define ROTATION A0
+
+void setup() {
+
+  Serial.begin(9600);
+
+  Serial.println("Teste Sensor de Rotacao");
+}
+
+void loop() {
+
+  // Ler valor analógico
+  int valorRotacao = analogRead(ROTATION);
+
+  // Mostrar no Serial Monitor
+  Serial.print("Valor do sensor: ");
+  Serial.println(valorRotacao);
+
+  delay(100);
+}
+
+BOTAO
+
+// ======================
+// LEITURA DE BOTÃO
+// ======================
+
+#define BOTAO D2
+
+void setup() {
+
+  Serial.begin(9600);
+
+  // INPUT_PULLUP ativa resistor interno
+  pinMode(BOTAO, INPUT_PULLUP);
+
+  Serial.println("Teste do Botao");
+}
+
+void loop() {
+
+  // Ler estado do botão
+  int estadoBotao = digitalRead(BOTAO);
+
+  // ======================
+  // BOTÃO PRESSIONADO
+  // ======================
+
+  if (estadoBotao == LOW) {
+
+    Serial.println("Botao pressionado");
+  }
+
+  // ======================
+  // BOTÃO SOLTO
+  // ======================
+
+  else {
+
+    Serial.println("Botao solto");
+  }
+
+  delay(300);
+}
+
+
+IR
+
+#include <IRremote.h>
+
+#define IR_PIN D6
+
+IRrecv irrecv(IR_PIN);
+
+decode_results results;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  irrecv.enableIRIn();
+
+  Serial.println("IR iniciado");
+}
+
+void loop() {
+
+  if (irrecv.decode(&results)) {
+
+    Serial.print("Codigo: ");
+
+    Serial.println(results.value, HEX);
+
+    irrecv.resume();
+  }
+}
+
+LED
+
+// ======================
+// LED RGB - ESP8266
+// ======================
+
+// Pinos do LED RGB
+#define LED_R D9
+#define LED_G D10
+#define LED_B D11
+
+void setup() {
+
+  Serial.begin(9600);
+
+  // Configura os pinos como saída
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
+
+  Serial.println("Teste LED RGB");
+}
+
+void loop() {
+
+  // ======================
+  // VERMELHO
+  // ======================
+
+  Serial.println("VERMELHO");
+
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_B, LOW);
+
+  delay(2000);
+
+  // ======================
+  // VERDE
+  // ======================
+
+  Serial.println("VERDE");
+
+  digitalWrite(LED_R, LOW);
+  digitalWrite(LED_G, HIGH);
+  digitalWrite(LED_B, LOW);
+
+  delay(2000);
+
+  // ======================
+  // AZUL
+  // ======================
+
+  Serial.println("AZUL");
+
+  digitalWrite(LED_R, LOW);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_B, HIGH);
+
+  delay(2000);
+
+  // ======================
+  // BRANCO
+  // ======================
+
+  Serial.println("BRANCO");
+
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_G, HIGH);
+  digitalWrite(LED_B, HIGH);
+
+  delay(2000);
+
+  // ======================
+  // DESLIGADO
+  // ======================
+
+  Serial.println("DESLIGADO");
+
+  digitalWrite(LED_R, LOW);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_B, LOW);
+
+  delay(2000);
+}
+
+BUZZER
+
+// ======================
+// TESTE DO BUZZER
+// ESP8266
+// ======================
+
+#define BUZZER D5
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(BUZZER, OUTPUT);
+
+  Serial.println("Teste do Buzzer");
+}
+
+void loop() {
+
+  // ======================
+  // SOM 1
+  // ======================
+
+  Serial.println("BEEP 1");
+
+  tone(BUZZER, 1000); // frequência
+
+  delay(500);
+
+  noTone(BUZZER);
+
+  delay(1000);
+
+  // ======================
+  // SOM 2
+  // ======================
+
+  Serial.println("BEEP 2");
+
+  tone(BUZZER, 2000);
+
+  delay(500);
+
+  noTone(BUZZER);
+
+  delay(1000);
+}
