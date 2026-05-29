@@ -1,4 +1,4 @@
-# 📡 Entradas do Sistema
+# Entradas do Sistema
 
 Os componentes utilizados no sistema são:
 
@@ -10,7 +10,7 @@ Os componentes utilizados no sistema são:
 
 ---
 
-# ⚙️ Variáveis do Sistema
+# Variáveis do Sistema
 
 O sistema trabalha com as seguintes variáveis:
 
