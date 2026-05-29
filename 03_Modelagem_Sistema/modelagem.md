@@ -73,4 +73,3 @@ ENVIAR via Wi-Fi (TCP/IP)
 }
   "buzzer": 1,
   "led": "vermelho"
-}
