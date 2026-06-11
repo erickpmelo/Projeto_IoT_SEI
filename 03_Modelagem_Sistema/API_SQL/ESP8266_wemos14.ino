@@ -29,7 +29,7 @@ const char* password = "Senai@122";
 // IP DO COMPUTADOR
 // ======================================================
 
-String servidor = "10.106.202.32";
+String servidor = "10.106.208.21";
 
 // ======================================================
 // NOME SENSOR
@@ -232,5 +232,3 @@ void loop() {
     tempoAnterior = millis();
   }
 }
-
-esse é o codigo que eu usei no arduino IDE pra se conectr com o vs code e dps o vs code vai se conectar com o google sheets, pra salvar no github dentro da minha pasta api eu faço como
