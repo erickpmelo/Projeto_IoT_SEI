@@ -635,4 +635,96 @@ def register():
             if cursor: cursor.close()
             if conexao: conexao.close()
 
-    return render_template_string(
+    return render_template_string(html_tela_autenticacao, modo="registro", erro=erro, sucesso=None)
+
+
+# ======================================================
+# INGESTÃO DO ESP8266 COM FILTRO DE BLOQUEIO ATIVO
+# ======================================================
+@app.route('/S.E.I.')
+def receber():
+    global sheet
+    conexao = None
+    cursor = None
+    try:
+        sensor_nome = request.args.get('sensor', 'ESP8266_TEMP')
+        temperatura = request.args.get('temperatura', '0')
+        umidade = request.args.get('umidade', '0')
+        agora = datetime.now()
+
+        conexao = mysql.connector.connect(**db_config)
+        cursor = conexao.cursor()
+        
+        # Filtro de Bloqueio de Hardware
+        cursor.execute("SELECT status FROM dispositivos WHERE nome = %s", (sensor_nome,))
+        status_disp = cursor.fetchone()
+        
+        if status_disp and status_disp[0] == 'Bloqueado':
+            return "DISPOSITIVO_BLOQUEADO", 403
+
+        if not status_disp:
+            cursor.execute("INSERT INTO dispositivos (nome, status) VALUES (%s, 'Ativo')", (sensor_nome,))
+            conexao.commit()
+
+        # Insere a leitura normal
+        query_mysql = "INSERT INTO leituras (sensor, temperatura, umidade, data_hora) VALUES (%s, %s, %s, %s)"
+        cursor.execute(query_mysql, (sensor_nome, float(temperatura.replace(',', '.')), float(umidade.replace(',', '.')), agora))
+        conexao.commit()
+        
+        if sheet is not None:
+            try:
+                sheet.append_row([sensor_nome, temperatura, agora.strftime("%d/%m/%Y %H:%M:%S")])
+            except: pass
+
+        return "OK", 200
+    except Exception as e:
+        return str(e), 500
+    finally:
+        if cursor: cursor.close()
+        if conexao: conexao.close()
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+
+# Interface de Login/Cadastro Estilo Insta
+html_tela_autenticacao = """
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Acesso</title>
+    <style>
+        body { background-color: #000000; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin:0;}
+        .card { background: #000000; width: 300px; padding: 35px; border-radius: 1px; text-align: center; border: 1px solid #262626; }
+        input { width: 90%; padding: 11px; margin-bottom: 12px; background: #121212; color: white; border: 1px solid #262626; text-align: left; text-indent: 5px; border-radius: 3px; }
+        button { background: #0095f6; color: white; border: none; padding: 11px; width: 98%; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 style="font-family: sans-serif; font-weight: bold; font-style: italic;">InstaIoT</h2>
+        <p style="color: #a8a8a8; font-size: 13px; margin-bottom:20px;">📦 Projeto S.E.I. Integrado</p>
+        <form method="POST">
+            <input type="text" name="usuario_input" placeholder="Nome de usuário" required autocomplete="off">
+            <input type="password" name="senha_input" placeholder="Senha" required>
+            {% if erro %}<p style="color:#ed4956; font-size:13px;">{{ erro }}</p>{% endif %}
+            {% if sucesso %}<p style="color:#30d158; font-size:13px;">{{ sucesso }}</p>{% endif %}
+            <button type="submit">{% if modo == 'login' %}Entrar{% else %}Cadastrar-se{% endif %}</button>
+        </form>
+        <br>
+        {% if modo == 'login' %}
+            <a href="/register" style="color:#0095f6; text-decoration:none; font-size:13px; font-weight:600;">Não tem uma conta? Cadastre-se</a>
+        {% else %}
+            <a href="/login" style="color:#0095f6; text-decoration:none; font-size:13px; font-weight:600;">Já tem uma conta? Conecte-se</a>
+        {% endif %}
+    </div>
+</body>
+</html>
+"""
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
